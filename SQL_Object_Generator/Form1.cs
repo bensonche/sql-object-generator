@@ -15,16 +15,22 @@ namespace SQL_Object_Generator
         public Form1()
         {
             InitializeComponent();
+            toggleAuthentication();
         }
 
-        private void cbxSql_CheckedChanged(object sender, EventArgs e)
+        private void Form1_Resize(object sender, EventArgs e)
         {
-
+            gpConnection.MinimumSize = new Size(Size.Width - 41, 0);
         }
 
-        private void cbxIntegrated_CheckedChanged(object sender, EventArgs e)
+        private void toggleAuthentication(object sender = null, EventArgs e = null)
         {
+            bool visible = rdbSql.Checked;
 
+            lblUsername.Visible = visible;
+            lblPassword.Visible = visible;
+            txtUsername.Visible = visible;
+            txtPassword.Visible = visible;
         }
     }
 }

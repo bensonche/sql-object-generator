@@ -30,11 +30,16 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.txtServerName = new System.Windows.Forms.TextBox();
             this.txtDatabaseName = new System.Windows.Forms.TextBox();
             this.rdbIntegrated = new System.Windows.Forms.RadioButton();
             this.rdbSql = new System.Windows.Forms.RadioButton();
+            this.gpConnection = new System.Windows.Forms.GroupBox();
+            this.lblUsername = new System.Windows.Forms.Label();
+            this.lblPassword = new System.Windows.Forms.Label();
+            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.gpConnection.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -54,15 +59,6 @@
             this.label2.Size = new System.Drawing.Size(84, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Database Name";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 67);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Authentication";
             // 
             // txtServerName
             // 
@@ -85,39 +81,100 @@
             // rdbIntegrated
             // 
             this.rdbIntegrated.AutoSize = true;
-            this.rdbIntegrated.Location = new System.Drawing.Point(102, 65);
+            this.rdbIntegrated.Checked = true;
+            this.rdbIntegrated.Location = new System.Drawing.Point(6, 19);
             this.rdbIntegrated.Name = "rdbIntegrated";
             this.rdbIntegrated.Size = new System.Drawing.Size(73, 17);
             this.rdbIntegrated.TabIndex = 5;
             this.rdbIntegrated.TabStop = true;
             this.rdbIntegrated.Text = "Integrated";
             this.rdbIntegrated.UseVisualStyleBackColor = true;
+            this.rdbIntegrated.CheckedChanged += new System.EventHandler(this.toggleAuthentication);
             // 
             // rdbSql
             // 
             this.rdbSql.AutoSize = true;
-            this.rdbSql.Location = new System.Drawing.Point(182, 65);
+            this.rdbSql.Location = new System.Drawing.Point(85, 19);
             this.rdbSql.Name = "rdbSql";
             this.rdbSql.Size = new System.Drawing.Size(46, 17);
             this.rdbSql.TabIndex = 6;
             this.rdbSql.TabStop = true;
             this.rdbSql.Text = "SQL";
             this.rdbSql.UseVisualStyleBackColor = true;
+            this.rdbSql.CheckedChanged += new System.EventHandler(this.toggleAuthentication);
+            // 
+            // gpConnection
+            // 
+            this.gpConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gpConnection.AutoSize = true;
+            this.gpConnection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gpConnection.Controls.Add(this.txtPassword);
+            this.gpConnection.Controls.Add(this.txtUsername);
+            this.gpConnection.Controls.Add(this.lblPassword);
+            this.gpConnection.Controls.Add(this.lblUsername);
+            this.gpConnection.Controls.Add(this.rdbIntegrated);
+            this.gpConnection.Controls.Add(this.rdbSql);
+            this.gpConnection.Location = new System.Drawing.Point(13, 64);
+            this.gpConnection.MinimumSize = new System.Drawing.Size(259, 0);
+            this.gpConnection.Name = "gpConnection";
+            this.gpConnection.Size = new System.Drawing.Size(259, 113);
+            this.gpConnection.TabIndex = 7;
+            this.gpConnection.TabStop = false;
+            this.gpConnection.Text = "Connection";
+            // 
+            // lblUsername
+            // 
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Location = new System.Drawing.Point(6, 45);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(55, 13);
+            this.lblUsername.TabIndex = 7;
+            this.lblUsername.Text = "Username";
+            // 
+            // lblPassword
+            // 
+            this.lblPassword.AutoSize = true;
+            this.lblPassword.Location = new System.Drawing.Point(8, 77);
+            this.lblPassword.Name = "lblPassword";
+            this.lblPassword.Size = new System.Drawing.Size(53, 13);
+            this.lblPassword.TabIndex = 8;
+            this.lblPassword.Text = "Password";
+            // 
+            // txtUsername
+            // 
+            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUsername.Location = new System.Drawing.Point(67, 42);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(186, 20);
+            this.txtUsername.TabIndex = 9;
+            // 
+            // txtPassword
+            // 
+            this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassword.Location = new System.Drawing.Point(67, 74);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
+            this.txtPassword.Size = new System.Drawing.Size(186, 20);
+            this.txtPassword.TabIndex = 10;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.rdbSql);
-            this.Controls.Add(this.rdbIntegrated);
+            this.Controls.Add(this.gpConnection);
             this.Controls.Add(this.txtDatabaseName);
             this.Controls.Add(this.txtServerName);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
+            this.gpConnection.ResumeLayout(false);
+            this.gpConnection.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,11 +184,15 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtServerName;
         private System.Windows.Forms.TextBox txtDatabaseName;
         private System.Windows.Forms.RadioButton rdbIntegrated;
         private System.Windows.Forms.RadioButton rdbSql;
+        private System.Windows.Forms.GroupBox gpConnection;
+        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.Label lblPassword;
+        private System.Windows.Forms.Label lblUsername;
 
 
     }

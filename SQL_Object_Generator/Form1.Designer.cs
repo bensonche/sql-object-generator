@@ -34,12 +34,15 @@
             this.txtDatabaseName = new System.Windows.Forms.TextBox();
             this.rdbIntegrated = new System.Windows.Forms.RadioButton();
             this.rdbSql = new System.Windows.Forms.RadioButton();
-            this.gpConnection = new System.Windows.Forms.GroupBox();
-            this.lblUsername = new System.Windows.Forms.Label();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.gpAuthentication = new System.Windows.Forms.GroupBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
-            this.gpConnection.SuspendLayout();
+            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.lblPassword = new System.Windows.Forms.Label();
+            this.lblUsername = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtDirectory = new System.Windows.Forms.TextBox();
+            this.btnBrowseDir = new System.Windows.Forms.Button();
+            this.gpAuthentication.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -103,52 +106,25 @@
             this.rdbSql.UseVisualStyleBackColor = true;
             this.rdbSql.CheckedChanged += new System.EventHandler(this.toggleAuthentication);
             // 
-            // gpConnection
+            // gpAuthentication
             // 
-            this.gpConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.gpAuthentication.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gpConnection.AutoSize = true;
-            this.gpConnection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gpConnection.Controls.Add(this.txtPassword);
-            this.gpConnection.Controls.Add(this.txtUsername);
-            this.gpConnection.Controls.Add(this.lblPassword);
-            this.gpConnection.Controls.Add(this.lblUsername);
-            this.gpConnection.Controls.Add(this.rdbIntegrated);
-            this.gpConnection.Controls.Add(this.rdbSql);
-            this.gpConnection.Location = new System.Drawing.Point(13, 64);
-            this.gpConnection.MinimumSize = new System.Drawing.Size(259, 0);
-            this.gpConnection.Name = "gpConnection";
-            this.gpConnection.Size = new System.Drawing.Size(259, 113);
-            this.gpConnection.TabIndex = 7;
-            this.gpConnection.TabStop = false;
-            this.gpConnection.Text = "Connection";
-            // 
-            // lblUsername
-            // 
-            this.lblUsername.AutoSize = true;
-            this.lblUsername.Location = new System.Drawing.Point(6, 45);
-            this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(55, 13);
-            this.lblUsername.TabIndex = 7;
-            this.lblUsername.Text = "Username";
-            // 
-            // lblPassword
-            // 
-            this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(8, 77);
-            this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(53, 13);
-            this.lblPassword.TabIndex = 8;
-            this.lblPassword.Text = "Password";
-            // 
-            // txtUsername
-            // 
-            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUsername.Location = new System.Drawing.Point(67, 42);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(186, 20);
-            this.txtUsername.TabIndex = 9;
+            this.gpAuthentication.AutoSize = true;
+            this.gpAuthentication.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gpAuthentication.Controls.Add(this.txtPassword);
+            this.gpAuthentication.Controls.Add(this.txtUsername);
+            this.gpAuthentication.Controls.Add(this.lblPassword);
+            this.gpAuthentication.Controls.Add(this.lblUsername);
+            this.gpAuthentication.Controls.Add(this.rdbIntegrated);
+            this.gpAuthentication.Controls.Add(this.rdbSql);
+            this.gpAuthentication.Location = new System.Drawing.Point(13, 64);
+            this.gpAuthentication.MinimumSize = new System.Drawing.Size(259, 0);
+            this.gpAuthentication.Name = "gpAuthentication";
+            this.gpAuthentication.Size = new System.Drawing.Size(259, 113);
+            this.gpAuthentication.TabIndex = 7;
+            this.gpAuthentication.TabStop = false;
+            this.gpAuthentication.Text = "Authentication";
             // 
             // txtPassword
             // 
@@ -160,12 +136,72 @@
             this.txtPassword.Size = new System.Drawing.Size(186, 20);
             this.txtPassword.TabIndex = 10;
             // 
+            // txtUsername
+            // 
+            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUsername.Location = new System.Drawing.Point(67, 42);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(186, 20);
+            this.txtUsername.TabIndex = 9;
+            // 
+            // lblPassword
+            // 
+            this.lblPassword.AutoSize = true;
+            this.lblPassword.Location = new System.Drawing.Point(8, 77);
+            this.lblPassword.Name = "lblPassword";
+            this.lblPassword.Size = new System.Drawing.Size(53, 13);
+            this.lblPassword.TabIndex = 8;
+            this.lblPassword.Text = "Password";
+            // 
+            // lblUsername
+            // 
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Location = new System.Drawing.Point(6, 45);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(55, 13);
+            this.lblUsername.TabIndex = 7;
+            this.lblUsername.Text = "Username";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 186);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(93, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Directory Location";
+            // 
+            // txtDirectory
+            // 
+            this.txtDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtDirectory.Location = new System.Drawing.Point(113, 183);
+            this.txtDirectory.Name = "txtDirectory";
+            this.txtDirectory.Size = new System.Drawing.Size(127, 20);
+            this.txtDirectory.TabIndex = 9;
+            // 
+            // btnBrowseDir
+            // 
+            this.btnBrowseDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseDir.AutoSize = true;
+            this.btnBrowseDir.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnBrowseDir.Location = new System.Drawing.Point(246, 183);
+            this.btnBrowseDir.Name = "btnBrowseDir";
+            this.btnBrowseDir.Size = new System.Drawing.Size(26, 23);
+            this.btnBrowseDir.TabIndex = 10;
+            this.btnBrowseDir.Text = "...";
+            this.btnBrowseDir.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.gpConnection);
+            this.Controls.Add(this.btnBrowseDir);
+            this.Controls.Add(this.txtDirectory);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.gpAuthentication);
             this.Controls.Add(this.txtDatabaseName);
             this.Controls.Add(this.txtServerName);
             this.Controls.Add(this.label2);
@@ -173,8 +209,8 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.gpConnection.ResumeLayout(false);
-            this.gpConnection.PerformLayout();
+            this.gpAuthentication.ResumeLayout(false);
+            this.gpAuthentication.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,11 +224,14 @@
         private System.Windows.Forms.TextBox txtDatabaseName;
         private System.Windows.Forms.RadioButton rdbIntegrated;
         private System.Windows.Forms.RadioButton rdbSql;
-        private System.Windows.Forms.GroupBox gpConnection;
+        private System.Windows.Forms.GroupBox gpAuthentication;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtDirectory;
+        private System.Windows.Forms.Button btnBrowseDir;
 
 
     }

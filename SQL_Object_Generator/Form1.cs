@@ -20,7 +20,7 @@ namespace SQL_Object_Generator
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            gpConnection.MinimumSize = new Size(Size.Width - 41, 0);
+            gpAuthentication.MinimumSize = new Size(Size.Width - 41, 0);
         }
 
         private void toggleAuthentication(object sender = null, EventArgs e = null)

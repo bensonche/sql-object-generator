@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SQL_Script_Generator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Resource Data Inc.")]
+[assembly: AssemblyCompany("Resource Data, Inc.")]
 [assembly: AssemblyProduct("SQL_Script_Generator")]
-[assembly: AssemblyCopyright("Copyright © Resource Data Inc. 2015")]
+[assembly: AssemblyCopyright("Copyright © Resource Data, Inc. 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e51f25ed-8cf3-4057-b056-5ca46a472bf9")]
+[assembly: Guid("1c5129cd-d57f-408b-8283-e5965b5b22eb")]
 
 // Version information for an assembly consists of the following four values:
 //

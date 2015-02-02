@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SQL_Script_Generator
+namespace SQL_Object_Generator
 {
     static class Program
     {

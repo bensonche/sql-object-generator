@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SQL_Script_Generator")]
+[assembly: AssemblyTitle("SQL_Object_Generator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Resource Data Inc.")]
-[assembly: AssemblyProduct("SQL_Script_Generator")]
+[assembly: AssemblyProduct("SQL_Object_Generator")]
 [assembly: AssemblyCopyright("Copyright © Resource Data Inc. 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e51f25ed-8cf3-4057-b056-5ca46a472bf9")]
+[assembly: Guid("9941a94e-cf9d-491c-a60b-9afae7cb4b6c")]
 
 // Version information for an assembly consists of the following four values:
 //

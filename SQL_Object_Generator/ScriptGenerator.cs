@@ -56,16 +56,57 @@ namespace SQL_Object_Generator
 
             con.Close();
 
-            Task triggers = Task.Run(() => GetTriggers(OutputDir, con));
-            Task functions = Task.Run(() => GetFunctions(OutputDir, con));
-            Task procs = Task.Run(() => GetProcs(OutputDir, con));
+            SetCounts();
+            
+            Task triggers = Task.Run(() => GetTriggers(OutputDir));
+            Task functions = Task.Run(() => GetFunctions(OutputDir));
+            Task procs = Task.Run(() => GetProcs(OutputDir));
 
             await triggers;
             await functions;
             await procs;
         }
 
-        private async Task GetFunctions(string outputDir, SqlConnection con)
+        private void SetCounts()
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                string commandText = @"
+                select count(*)
+                from sys.triggers";
+
+                con.Open();
+
+               SqlCommand cmd= con.CreateCommand();
+                cmd.CommandText = commandText;
+                cmd.CommandType= CommandType.Text;
+
+                triggersRemaining = (int) cmd.ExecuteScalar();
+
+                commandText = @"
+                select count(*)
+                from sys.objects
+                where type in (N'FN', N'IF', N'TF', N'FS', N'FT')";
+
+                cmd = con.CreateCommand();
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.Text;
+
+                functionsRemaining = (int)cmd.ExecuteScalar();
+
+                commandText = @"
+                select count(*)
+                from sys.procedures";
+
+                cmd = con.CreateCommand();
+                cmd.CommandText = commandText;
+                cmd.CommandType = CommandType.Text;
+
+                procsRemaining = (int)cmd.ExecuteScalar();
+            }
+        }
+
+        private async Task GetFunctions(string outputDir)
         {
             string commandText = @"
                 select a.name, b.definition, c.name as [schema]
@@ -92,7 +133,7 @@ namespace SQL_Object_Generator
             GenerateObjectScript(outputDir, "functions", commandText, sb.ToString(),ref functionsRemaining, true);
         }
 
-        private async Task GetProcs(string outputDir, SqlConnection con)
+        private async Task GetProcs(string outputDir)
         {
             string commandText = @"
                 select a.name, b.definition, c.name as [schema]
@@ -118,7 +159,7 @@ namespace SQL_Object_Generator
             GenerateObjectScript(outputDir, "procs", commandText, sb.ToString(), ref procsRemaining, true);
         }
 
-        private async Task GetTriggers(string outputDir, SqlConnection con)
+        private async Task GetTriggers(string outputDir)
         {
             string commandText = @"
                 select a.name, b.definition, d.name as [schema]
@@ -166,12 +207,10 @@ namespace SQL_Object_Generator
 
                 foreach (var f in d.GetFiles())
                     f.Delete();
-
-                count = 0;
-
+                
                 while (reader.Read())
                 {
-                    count++;
+                    Interlocked.Decrement(ref count);
 
                     string name = reader["name"].ToString();
                     string definition = reader["definition"].ToString();

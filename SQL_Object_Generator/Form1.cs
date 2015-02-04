@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +19,18 @@ namespace SQL_Object_Generator
         public Form1()
         {
             InitializeComponent();
+
+            txtServerName.Enter += Textbox_Enter;
+            txtDatabaseName.Enter += Textbox_Enter;
+            txtUsername.Enter += Textbox_Enter;
+            txtPassword.Enter += Textbox_Enter;
+            txtDirectory.Enter += Textbox_Enter;
+            
+            txtServerName.TextChanged += Textbox_Enter;
+            txtDatabaseName.TextChanged += Textbox_Enter;
+            txtUsername.TextChanged += Textbox_Enter;
+            txtPassword.TextChanged += Textbox_Enter;
+            txtDirectory.TextChanged += Textbox_Enter;
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -64,6 +78,77 @@ namespace SQL_Object_Generator
         private void Form1_Load(object sender, EventArgs e)
         {
             toggleAuthentication();
+        }
+
+        private async void btnGenerate_Click(object sender, EventArgs e)
+        {
+            btnGenerate.Enabled = false;
+
+            if (!ValidateForm())
+            {
+                btnGenerate.Enabled = true;
+                return;
+            }
+
+            ScriptGenerator generator = new ScriptGenerator
+            {
+                serverName = txtServerName.Text,
+                dbName = txtDatabaseName.Text,
+                username = txtUsername.Text,
+                password = txtPassword.Text,
+                integrated = rdbIntegrated.Checked
+            };
+
+            try
+            {
+                await generator.GenerateAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                    "Error connecting to database");
+            }
+            finally
+            {
+                btnGenerate.Enabled = true;
+            }
+        }
+
+        private void Textbox_Enter(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+
+            if (txt == null)
+                return;
+
+            txt.ResetBackColor();
+        }
+
+        private bool ValidateForm()
+        {
+            bool success = true;
+
+            success &= ValidateControl(txtServerName);
+            success &=ValidateControl(txtDatabaseName);
+            success &=ValidateControl(txtDirectory);
+
+            if (rdbSql.Checked)
+            {
+                success &= ValidateControl(txtUsername);
+                success &= ValidateControl(txtPassword);
+            }
+
+            return success;
+        }
+
+        private bool ValidateControl(TextBox txt)
+        {
+            if (string.IsNullOrWhiteSpace(txt.Text))
+            {
+                txt.BackColor = Color.Yellow;
+                return false;
+            }
+            return true;
         }
     }
 }

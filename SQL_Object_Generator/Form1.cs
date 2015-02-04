@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,20 @@ namespace SQL_Object_Generator
             lblPassword.Visible = visible;
             txtUsername.Visible = visible;
             txtPassword.Visible = visible;
+        }
+
+        private void btnBrowseDir_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "Select the directory to output the scripts.";
+            dialog.ShowNewFolderButton = true;
+            dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                txtDirectory.Text = dialog.SelectedPath;
+            }
         }
     }
 }

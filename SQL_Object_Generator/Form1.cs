@@ -83,11 +83,20 @@ namespace SQL_Object_Generator
         {
             btnGenerate.Enabled = false;
 
-            if (!ValidateForm())
+            try
+            {
+                await GenerateAsync();
+            }
+            finally
             {
                 btnGenerate.Enabled = true;
-                return;
             }
+        }
+
+        private async Task GenerateAsync()
+        {
+            if (!ValidateForm())
+                return;
 
             _generator = new ScriptGenerator
             {
@@ -99,20 +108,17 @@ namespace SQL_Object_Generator
                 OutputDir = txtDirectory.Text
             };
 
+            System.Timers.Timer timer = new System.Timers.Timer(1000);
+            timer.Elapsed += timer_Elapsed;
+            timer.AutoReset = true;
+
             try
             {
                 Task gen = _generator.GenerateAsync();
 
-                System.Timers.Timer timer = new System.Timers.Timer(1000);
-                timer.Elapsed += timer_Elapsed;
-                timer.AutoReset = true;
                 timer.Enabled = true;
 
                 await gen;
-
-                timer.Enabled = false;
-                timer_Elapsed();
-
             }
             catch (Exception ex)
             {
@@ -121,7 +127,8 @@ namespace SQL_Object_Generator
             }
             finally
             {
-                btnGenerate.Enabled = true;
+                timer.Enabled = false;
+                timer_Elapsed();
             }
         }
 

@@ -81,42 +81,33 @@ namespace SQL_Object_Generator
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
-                string commandText = @"
-                select count(*)
-                from sys.triggers";
-
                 con.Open();
 
-                SqlCommand cmd = con.CreateCommand();
-                cmd.CommandText = commandText;
-                cmd.CommandType = CommandType.Text;
+                _triggersRemaining = GetScalar(con, @"
+                    select count(*)
+                    from sys.triggers");
 
-                _triggersRemaining = (int) cmd.ExecuteScalar();
+                _functionsRemaining = GetScalar(con, @"
+                    select count(*)
+                    from sys.objects
+                    where type in (N'FN', N'IF', N'TF', N'FS', N'FT')");
 
-                commandText = @"
-                select count(*)
-                from sys.objects
-                where type in (N'FN', N'IF', N'TF', N'FS', N'FT')";
-
-                cmd = con.CreateCommand();
-                cmd.CommandText = commandText;
-                cmd.CommandType = CommandType.Text;
-
-                _functionsRemaining = (int) cmd.ExecuteScalar();
-
-                commandText = @"
-                select count(*)
-                from sys.procedures";
-
-                cmd = con.CreateCommand();
-                cmd.CommandText = commandText;
-                cmd.CommandType = CommandType.Text;
-
-                _procsRemaining = (int) cmd.ExecuteScalar();
+                _procsRemaining = GetScalar(con, @"
+                    select count(*)
+                    from sys.procedures");
             }
         }
 
-        private async Task GetFunctions(string outputDir)
+        private int GetScalar(SqlConnection con, string commandText)
+        {
+            SqlCommand cmd = con.CreateCommand();
+            cmd.CommandText = commandText;
+            cmd.CommandType = CommandType.Text;
+
+            return (int) cmd.ExecuteScalar();
+        }
+
+        private void GetFunctions(string outputDir)
         {
             const string commandText = @"
                 select a.name, b.definition, c.name as [schema]
@@ -143,7 +134,7 @@ namespace SQL_Object_Generator
             GenerateObjectScript(outputDir, "functions", commandText, sb.ToString(), ref _functionsRemaining, true);
         }
 
-        private async Task GetProcs(string outputDir)
+        private void GetProcs(string outputDir)
         {
             const string commandText = @"
                 select a.name, b.definition, c.name as [schema]
@@ -169,7 +160,7 @@ namespace SQL_Object_Generator
             GenerateObjectScript(outputDir, "procs", commandText, sb.ToString(), ref _procsRemaining, true);
         }
 
-        private async Task GetTriggers(string outputDir)
+        private void GetTriggers(string outputDir)
         {
             string commandText = @"
                 select a.name, b.definition, d.name as [schema]
@@ -222,7 +213,7 @@ namespace SQL_Object_Generator
 
                 while (reader.Read())
                 {
-                    Interlocked.Decrement(ref count);
+                    count--;
 
                     string name = reader["name"].ToString();
                     string definition = reader["definition"].ToString();

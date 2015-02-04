@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace SQL_Object_Generator
 {
@@ -16,7 +17,6 @@ namespace SQL_Object_Generator
         public Form1()
         {
             InitializeComponent();
-            toggleAuthentication();
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -32,6 +32,19 @@ namespace SQL_Object_Generator
             lblPassword.Visible = visible;
             txtUsername.Visible = visible;
             txtPassword.Visible = visible;
+
+            SetDirectoryInfoLayoutLocation();
+        }
+
+        private void SetDirectoryInfoLayoutLocation()
+        {
+            int y = gpAuthentication.Height;
+            y += gpAuthentication.Location.Y;
+            y += 9;
+
+            lblDirectory.Location = new Point(lblDirectory.Location.X, y);
+            txtDirectory.Location = new Point(txtDirectory.Location.X, y);
+            btnBrowseDir.Location = new Point(btnBrowseDir.Location.X, y);
         }
 
         private void btnBrowseDir_Click(object sender, EventArgs e)
@@ -46,6 +59,11 @@ namespace SQL_Object_Generator
             {
                 txtDirectory.Text = dialog.SelectedPath;
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            toggleAuthentication();
         }
     }
 }

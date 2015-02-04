@@ -39,9 +39,10 @@
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.lblUsername = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblDirectory = new System.Windows.Forms.Label();
             this.txtDirectory = new System.Windows.Forms.TextBox();
             this.btnBrowseDir = new System.Windows.Forms.Button();
+            this.btnGenerate = new System.Windows.Forms.Button();
             this.gpAuthentication.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -163,14 +164,14 @@
             this.lblUsername.TabIndex = 7;
             this.lblUsername.Text = "Username";
             // 
-            // label3
+            // lblDirectory
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 186);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Directory Location";
+            this.lblDirectory.AutoSize = true;
+            this.lblDirectory.Location = new System.Drawing.Point(14, 186);
+            this.lblDirectory.Name = "lblDirectory";
+            this.lblDirectory.Size = new System.Drawing.Size(93, 13);
+            this.lblDirectory.TabIndex = 8;
+            this.lblDirectory.Text = "Directory Location";
             // 
             // txtDirectory
             // 
@@ -194,14 +195,25 @@
             this.btnBrowseDir.UseVisualStyleBackColor = true;
             this.btnBrowseDir.Click += new System.EventHandler(this.btnBrowseDir_Click);
             // 
+            // btnGenerate
+            // 
+            this.btnGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenerate.Location = new System.Drawing.Point(197, 227);
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(75, 23);
+            this.btnGenerate.TabIndex = 11;
+            this.btnGenerate.Text = "Generate";
+            this.btnGenerate.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.btnBrowseDir);
             this.Controls.Add(this.txtDirectory);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblDirectory);
             this.Controls.Add(this.gpAuthentication);
             this.Controls.Add(this.txtDatabaseName);
             this.Controls.Add(this.txtServerName);
@@ -209,6 +221,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.gpAuthentication.ResumeLayout(false);
             this.gpAuthentication.PerformLayout();
@@ -230,9 +243,10 @@
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.Label lblUsername;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblDirectory;
         private System.Windows.Forms.TextBox txtDirectory;
         private System.Windows.Forms.Button btnBrowseDir;
+        private System.Windows.Forms.Button btnGenerate;
 
 
     }

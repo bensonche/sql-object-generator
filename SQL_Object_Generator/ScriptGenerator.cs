@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SQL_Object_Generator
@@ -13,6 +15,14 @@ namespace SQL_Object_Generator
         public string DbName;
         public string Username;
         public string Password;
+
+        private int triggersRemaining;
+        private int functionsRemaining;
+        private int procsRemaining;
+
+        public int TriggersRemaining { get { return triggersRemaining; } }
+        public int FunctionsRemaining { get { return functionsRemaining; } }
+        public int ProcsRemaining{get { return procsRemaining; }}
 
         public bool Integrated;
 
@@ -46,12 +56,13 @@ namespace SQL_Object_Generator
 
             con.Close();
 
-            Task triggers = GetTriggers(OutputDir, con);
-            Task functions = GetFunctions(OutputDir, con);
+            Task triggers = Task.Run(() => GetTriggers(OutputDir, con));
+            Task functions = Task.Run(() => GetFunctions(OutputDir, con));
+            Task procs = Task.Run(() => GetProcs(OutputDir, con));
 
             await triggers;
             await functions;
-
+            await procs;
         }
 
         private async Task GetFunctions(string outputDir, SqlConnection con)
@@ -78,7 +89,33 @@ namespace SQL_Object_Generator
             sb.Append("{1}");
             sb.AppendLine("GO");
 
-            GenerateObjectScript(outputDir, "functions", commandText, sb.ToString(), true);
+            GenerateObjectScript(outputDir, "functions", commandText, sb.ToString(),ref functionsRemaining, true);
+        }
+
+        private async Task GetProcs(string outputDir, SqlConnection con)
+        {
+            string commandText = @"
+                select a.name, b.definition, c.name as [schema]
+                from sys.procedures a
+                    inner join sys.sql_modules b
+                        on a.object_id = b.object_id
+                    inner join sys.schemas c
+                        on a.schema_id = c.schema_id";
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine(
+                "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{2}].[{0}]') AND type in (N'P', N'PC'))");
+            sb.AppendLine("DROP PROCEDURE [{2}].[{0}]");
+            sb.AppendLine("GO");
+            sb.AppendLine("SET ANSI_NULLS ON");
+            sb.AppendLine("GO");
+            sb.AppendLine("SET QUOTED_IDENTIFIER ON");
+            sb.AppendLine("GO");
+            sb.Append("{1}");
+            sb.AppendLine("GO");
+
+            GenerateObjectScript(outputDir, "procs", commandText, sb.ToString(), ref procsRemaining, true);
         }
 
         private async Task GetTriggers(string outputDir, SqlConnection con)
@@ -105,11 +142,11 @@ namespace SQL_Object_Generator
             sb.Append("{1}");
             sb.AppendLine("GO");
 
-            GenerateObjectScript(outputDir, "triggers", commandText, sb.ToString());
+            GenerateObjectScript(outputDir, "triggers", commandText, sb.ToString(), ref triggersRemaining);
         }
 
         private void GenerateObjectScript(string outputDir, string description, string commandText,
-            string body, bool includePermissions = false)
+            string body, ref int count, bool includePermissions = false)
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
@@ -130,8 +167,12 @@ namespace SQL_Object_Generator
                 foreach (var f in d.GetFiles())
                     f.Delete();
 
+                count = 0;
+
                 while (reader.Read())
                 {
+                    count++;
+
                     string name = reader["name"].ToString();
                     string definition = reader["definition"].ToString();
                     string schema = reader["schema"].ToString();
@@ -158,18 +199,20 @@ namespace SQL_Object_Generator
                         }
                     }
                 }
+
+                count = -1;
             }
         }
 
         private string GetPermissionsString(string schema, string name)
         {
-            string commandText = @"
+            string commandText = string.Format(@"
                 select state_desc, permission_name, name
                 from sys.database_permissions a
                     left join sys.database_principals b
                         on a.grantee_principal_id = b.principal_id
-                where a.major_id = object_id('[dbo].[allusers]')
-                order by state_desc, permission_name, name";
+                where a.major_id = object_id('[{0}].[{1}]')
+                order by state_desc, permission_name, name", schema, name);
 
             StringBuilder sb = new StringBuilder();
 

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SQL_Object_Generator
 {
     public partial class Form1 : Form
     {
+        private ScriptGenerator generator;
+
         public Form1()
         {
             InitializeComponent();
@@ -86,7 +89,7 @@ namespace SQL_Object_Generator
                 return;
             }
 
-            ScriptGenerator generator = new ScriptGenerator
+             generator = new ScriptGenerator
             {
                 ServerName = txtServerName.Text,
                 DbName = txtDatabaseName.Text,
@@ -98,7 +101,16 @@ namespace SQL_Object_Generator
 
             try
             {
-                await generator.GenerateAsync();
+                Task gen = generator.GenerateAsync();
+
+                System.Timers.Timer timer = new System.Timers.Timer(1000);
+                timer.Elapsed += timer_Elapsed;
+                timer.AutoReset = true;
+                timer.Enabled = true;
+
+                await gen;
+
+                timer.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -109,6 +121,20 @@ namespace SQL_Object_Generator
             {
                 btnGenerate.Enabled = true;
             }
+        }
+
+        private void timer_Elapsed(object sender, EventArgs e)
+        {
+            string procs = generator.ProcsRemaining == -1 ? "done" : generator.ProcsRemaining.ToString();
+            string functions = generator.FunctionsRemaining == -1 ? "done" : generator.FunctionsRemaining.ToString();
+            string triggers = generator.TriggersRemaining == -1 ? "done" : generator.TriggersRemaining.ToString();
+
+            Invoke(new Action(() =>
+            {
+                lblStatus.Text = "Procs: " + procs + '\n';
+                lblStatus.Text += "Functions: " + functions + '\n';
+                lblStatus.Text += "Triggers: " + triggers + '\n';
+            }));
         }
 
         private void Textbox_Enter(object sender, EventArgs e)

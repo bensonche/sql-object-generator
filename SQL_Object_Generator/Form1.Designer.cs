@@ -43,6 +43,7 @@
             this.txtDirectory = new System.Windows.Forms.TextBox();
             this.btnBrowseDir = new System.Windows.Forms.Button();
             this.btnGenerate = new System.Windows.Forms.Button();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.gpAuthentication.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -206,11 +207,22 @@
             this.btnGenerate.UseVisualStyleBackColor = true;
             this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
+            // lblStatus
+            // 
+            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(12, 214);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(56, 39);
+            this.lblStatus.TabIndex = 12;
+            this.lblStatus.Text = "Procs:\r\nFunctions:\r\nTriggers:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.btnBrowseDir);
             this.Controls.Add(this.txtDirectory);
@@ -248,6 +260,7 @@
         private System.Windows.Forms.TextBox txtDirectory;
         private System.Windows.Forms.Button btnBrowseDir;
         private System.Windows.Forms.Button btnGenerate;
+        private System.Windows.Forms.Label lblStatus;
 
 
     }

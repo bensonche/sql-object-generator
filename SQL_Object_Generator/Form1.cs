@@ -21,6 +21,10 @@ namespace SQL_Object_Generator
             txtUsername.TextChanged += Textbox_Enter;
             txtPassword.TextChanged += Textbox_Enter;
             txtDirectory.TextChanged += Textbox_Enter;
+
+            txtServerName.Text = "sql-intranet2";
+            txtDatabaseName.Text = "RDI_Development";
+            txtDirectory.Text = "c:\\temp\\test";
         }
 
         private void Form1_Resize(object sender, EventArgs e)

@@ -7,7 +7,7 @@ namespace SQL_Object_Generator
 {
     public partial class Form1 : Form
     {
-        private ScriptGenerator generator;
+        private ScriptGenerator _generator;
 
         public Form1()
         {
@@ -18,7 +18,7 @@ namespace SQL_Object_Generator
             txtUsername.Enter += Textbox_Enter;
             txtPassword.Enter += Textbox_Enter;
             txtDirectory.Enter += Textbox_Enter;
-            
+
             txtServerName.TextChanged += Textbox_Enter;
             txtDatabaseName.TextChanged += Textbox_Enter;
             txtUsername.TextChanged += Textbox_Enter;
@@ -89,7 +89,7 @@ namespace SQL_Object_Generator
                 return;
             }
 
-             generator = new ScriptGenerator
+            _generator = new ScriptGenerator
             {
                 ServerName = txtServerName.Text,
                 DbName = txtDatabaseName.Text,
@@ -101,7 +101,7 @@ namespace SQL_Object_Generator
 
             try
             {
-                Task gen = generator.GenerateAsync();
+                Task gen = _generator.GenerateAsync();
 
                 System.Timers.Timer timer = new System.Timers.Timer(1000);
                 timer.Elapsed += timer_Elapsed;
@@ -111,6 +111,8 @@ namespace SQL_Object_Generator
                 await gen;
 
                 timer.Enabled = false;
+                timer_Elapsed();
+
             }
             catch (Exception ex)
             {
@@ -123,11 +125,11 @@ namespace SQL_Object_Generator
             }
         }
 
-        private void timer_Elapsed(object sender, EventArgs e)
+        private void timer_Elapsed(object sender = null, EventArgs e = null)
         {
-            string procs = generator.ProcsRemaining == -1 ? "done" : generator.ProcsRemaining.ToString();
-            string functions = generator.FunctionsRemaining == -1 ? "done" : generator.FunctionsRemaining.ToString();
-            string triggers = generator.TriggersRemaining == -1 ? "done" : generator.TriggersRemaining.ToString();
+            string procs = _generator.ProcsRemaining == -1 ? "done" : _generator.ProcsRemaining.ToString();
+            string functions = _generator.FunctionsRemaining == -1 ? "done" : _generator.FunctionsRemaining.ToString();
+            string triggers = _generator.TriggersRemaining == -1 ? "done" : _generator.TriggersRemaining.ToString();
 
             Invoke(new Action(() =>
             {
@@ -152,8 +154,8 @@ namespace SQL_Object_Generator
             bool success = true;
 
             success &= ValidateControl(txtServerName);
-            success &=ValidateControl(txtDatabaseName);
-            success &=ValidateControl(txtDirectory);
+            success &= ValidateControl(txtDatabaseName);
+            success &= ValidateControl(txtDirectory);
 
             if (rdbSql.Checked)
             {

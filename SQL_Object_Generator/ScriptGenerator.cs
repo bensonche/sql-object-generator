@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -16,13 +15,24 @@ namespace SQL_Object_Generator
         public string Username;
         public string Password;
 
-        private int triggersRemaining;
-        private int functionsRemaining;
-        private int procsRemaining;
+        private int _triggersRemaining;
+        private int _functionsRemaining;
+        private int _procsRemaining;
 
-        public int TriggersRemaining { get { return triggersRemaining; } }
-        public int FunctionsRemaining { get { return functionsRemaining; } }
-        public int ProcsRemaining{get { return procsRemaining; }}
+        public int TriggersRemaining
+        {
+            get { return _triggersRemaining; }
+        }
+
+        public int FunctionsRemaining
+        {
+            get { return _functionsRemaining; }
+        }
+
+        public int ProcsRemaining
+        {
+            get { return _procsRemaining; }
+        }
 
         public bool Integrated;
 
@@ -57,7 +67,7 @@ namespace SQL_Object_Generator
             con.Close();
 
             SetCounts();
-            
+
             Task triggers = Task.Run(() => GetTriggers(OutputDir));
             Task functions = Task.Run(() => GetFunctions(OutputDir));
             Task procs = Task.Run(() => GetProcs(OutputDir));
@@ -77,11 +87,11 @@ namespace SQL_Object_Generator
 
                 con.Open();
 
-               SqlCommand cmd= con.CreateCommand();
+                SqlCommand cmd = con.CreateCommand();
                 cmd.CommandText = commandText;
-                cmd.CommandType= CommandType.Text;
+                cmd.CommandType = CommandType.Text;
 
-                triggersRemaining = (int) cmd.ExecuteScalar();
+                _triggersRemaining = (int) cmd.ExecuteScalar();
 
                 commandText = @"
                 select count(*)
@@ -92,7 +102,7 @@ namespace SQL_Object_Generator
                 cmd.CommandText = commandText;
                 cmd.CommandType = CommandType.Text;
 
-                functionsRemaining = (int)cmd.ExecuteScalar();
+                _functionsRemaining = (int) cmd.ExecuteScalar();
 
                 commandText = @"
                 select count(*)
@@ -102,13 +112,13 @@ namespace SQL_Object_Generator
                 cmd.CommandText = commandText;
                 cmd.CommandType = CommandType.Text;
 
-                procsRemaining = (int)cmd.ExecuteScalar();
+                _procsRemaining = (int) cmd.ExecuteScalar();
             }
         }
 
         private async Task GetFunctions(string outputDir)
         {
-            string commandText = @"
+            const string commandText = @"
                 select a.name, b.definition, c.name as [schema]
                 from sys.objects a
                     inner join sys.sql_modules b
@@ -130,12 +140,12 @@ namespace SQL_Object_Generator
             sb.Append("{1}");
             sb.AppendLine("GO");
 
-            GenerateObjectScript(outputDir, "functions", commandText, sb.ToString(),ref functionsRemaining, true);
+            GenerateObjectScript(outputDir, "functions", commandText, sb.ToString(), ref _functionsRemaining, true);
         }
 
         private async Task GetProcs(string outputDir)
         {
-            string commandText = @"
+            const string commandText = @"
                 select a.name, b.definition, c.name as [schema]
                 from sys.procedures a
                     inner join sys.sql_modules b
@@ -156,7 +166,7 @@ namespace SQL_Object_Generator
             sb.Append("{1}");
             sb.AppendLine("GO");
 
-            GenerateObjectScript(outputDir, "procs", commandText, sb.ToString(), ref procsRemaining, true);
+            GenerateObjectScript(outputDir, "procs", commandText, sb.ToString(), ref _procsRemaining, true);
         }
 
         private async Task GetTriggers(string outputDir)
@@ -183,7 +193,7 @@ namespace SQL_Object_Generator
             sb.Append("{1}");
             sb.AppendLine("GO");
 
-            GenerateObjectScript(outputDir, "triggers", commandText, sb.ToString(), ref triggersRemaining);
+            GenerateObjectScript(outputDir, "triggers", commandText, sb.ToString(), ref _triggersRemaining);
         }
 
         private void GenerateObjectScript(string outputDir, string description, string commandText,
@@ -193,10 +203,12 @@ namespace SQL_Object_Generator
             {
                 con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = commandText;
+                SqlCommand cmd = new SqlCommand
+                {
+                    Connection = con,
+                    CommandType = CommandType.Text,
+                    CommandText = commandText
+                };
 
                 var reader = cmd.ExecuteReader();
 
@@ -207,7 +219,7 @@ namespace SQL_Object_Generator
 
                 foreach (var f in d.GetFiles())
                     f.Delete();
-                
+
                 while (reader.Read())
                 {
                     Interlocked.Decrement(ref count);
@@ -259,10 +271,12 @@ namespace SQL_Object_Generator
             {
                 con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = commandText;
+                SqlCommand cmd = new SqlCommand
+                {
+                    Connection = con,
+                    CommandType = CommandType.Text,
+                    CommandText = commandText
+                };
 
                 var reader = cmd.ExecuteReader();
 

@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace SQL_Object_Generator
 {
@@ -38,7 +28,7 @@ namespace SQL_Object_Generator
             gpAuthentication.MinimumSize = new Size(Size.Width - 41, 0);
         }
 
-        private void toggleAuthentication(object sender = null, EventArgs e = null)
+        private void ToggleAuthentication(object sender = null, EventArgs e = null)
         {
             bool visible = rdbSql.Checked;
 
@@ -63,10 +53,12 @@ namespace SQL_Object_Generator
 
         private void btnBrowseDir_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "Select the directory to output the scripts.";
-            dialog.ShowNewFolderButton = true;
-            dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+            FolderBrowserDialog dialog = new FolderBrowserDialog
+            {
+                Description = "Select the directory to output the scripts.",
+                ShowNewFolderButton = true,
+                RootFolder = Environment.SpecialFolder.MyComputer
+            };
 
             DialogResult result = dialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -77,7 +69,7 @@ namespace SQL_Object_Generator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            toggleAuthentication();
+            ToggleAuthentication();
         }
 
         private async void btnGenerate_Click(object sender, EventArgs e)
@@ -92,11 +84,12 @@ namespace SQL_Object_Generator
 
             ScriptGenerator generator = new ScriptGenerator
             {
-                serverName = txtServerName.Text,
-                dbName = txtDatabaseName.Text,
-                username = txtUsername.Text,
-                password = txtPassword.Text,
-                integrated = rdbIntegrated.Checked
+                ServerName = txtServerName.Text,
+                DbName = txtDatabaseName.Text,
+                Username = txtUsername.Text,
+                Password = txtPassword.Text,
+                Integrated = rdbIntegrated.Checked,
+                OutputDir = txtDirectory.Text
             };
 
             try

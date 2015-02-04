@@ -93,7 +93,7 @@
             this.rdbIntegrated.TabStop = true;
             this.rdbIntegrated.Text = "Integrated";
             this.rdbIntegrated.UseVisualStyleBackColor = true;
-            this.rdbIntegrated.CheckedChanged += new System.EventHandler(this.toggleAuthentication);
+            this.rdbIntegrated.CheckedChanged += new System.EventHandler(this.ToggleAuthentication);
             // 
             // rdbSql
             // 
@@ -105,7 +105,7 @@
             this.rdbSql.TabStop = true;
             this.rdbSql.Text = "SQL";
             this.rdbSql.UseVisualStyleBackColor = true;
-            this.rdbSql.CheckedChanged += new System.EventHandler(this.toggleAuthentication);
+            this.rdbSql.CheckedChanged += new System.EventHandler(this.ToggleAuthentication);
             // 
             // gpAuthentication
             // 

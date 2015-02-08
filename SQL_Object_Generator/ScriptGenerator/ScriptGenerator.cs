@@ -66,26 +66,6 @@ namespace BC.ScriptGenerator
             }
         }
 
-        private void GenerateObjectScript()
-        {
-
-        }
-
-        private void GetTriggers()
-        {
-            GenerateObjectScript(ObjectList[0]);
-        }
-
-        private void GetFunctions()
-        {
-            GenerateObjectScript(ObjectList[1]);
-        }
-
-        private void GetProcs()
-        {
-            GenerateObjectScript(ObjectList[2]);
-        }
-
         private void GenerateObjectScript(ObjectType type)
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))

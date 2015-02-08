@@ -97,10 +97,7 @@ namespace BC.ScriptGenerator
                     w.Write(type.FileBody, definition.Name, definition.Definition, definition.Schema);
 
                     if (definition.PermissionString != null)
-                    {
                         w.Write(definition.PermissionString);
-                        w.Write("GO");
-                    }
                 }
             }
 

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BC.ScriptGenerator;
 
 namespace SQL_Object_Generator
 {
@@ -98,15 +99,7 @@ namespace SQL_Object_Generator
             if (!ValidateForm())
                 return;
 
-            _generator = new ScriptGenerator
-            {
-                ServerName = txtServerName.Text,
-                DbName = txtDatabaseName.Text,
-                Username = txtUsername.Text,
-                Password = txtPassword.Text,
-                Integrated = rdbIntegrated.Checked,
-                OutputDir = txtDirectory.Text
-            };
+            _generator = new ScriptGenerator(txtServerName.Text, txtDatabaseName.Text, txtUsername.Text, txtPassword.Text, rdbIntegrated.Checked, txtDirectory.Text);
 
             System.Timers.Timer timer = new System.Timers.Timer(1000);
             timer.Elapsed += timer_Elapsed;
@@ -134,15 +127,13 @@ namespace SQL_Object_Generator
 
         private void timer_Elapsed(object sender = null, EventArgs e = null)
         {
-            string procs = _generator.ProcsRemaining == -1 ? "done" : _generator.ProcsRemaining.ToString();
-            string functions = _generator.FunctionsRemaining == -1 ? "done" : _generator.FunctionsRemaining.ToString();
-            string triggers = _generator.TriggersRemaining == -1 ? "done" : _generator.TriggersRemaining.ToString();
-
             Invoke(new Action(() =>
             {
-                lblStatus.Text = "Procs: " + procs + '\n';
-                lblStatus.Text += "Functions: " + functions + '\n';
-                lblStatus.Text += "Triggers: " + triggers + '\n';
+                lblStatus.Text = "";
+                foreach(var type in _generator.ObjectList)
+                {
+                    lblStatus.Text += string.Format("{0}: {1}\n", type.Name, type.Remaining);
+                }
             }));
         }
 

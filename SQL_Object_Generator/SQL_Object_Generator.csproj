@@ -7,7 +7,7 @@
     <ProjectGuid>{72F4EFBD-2FFA-483F-8F8B-102A79595835}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SQL_Object_Generator</RootNamespace>
+    <RootNamespace>BC</RootNamespace>
     <AssemblyName>SQL_Object_Generator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ScriptGenerator\ObjectTypes\Function.cs" />
+    <Compile Include="ScriptGenerator\ObjectTypes\ObjectType.cs" />
+    <Compile Include="ScriptGenerator\Model\DbObjectResult.cs" />
+    <Compile Include="ScriptGenerator\ObjectTypes\Proc.cs" />
+    <Compile Include="ScriptGenerator\ObjectTypes\Trigger.cs" />
+    <Compile Include="ScriptGenerator\ScriptGeneratorData.cs" />
     <Compile Include="SqlObjectGeneratorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -52,7 +58,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScriptGenerator.cs" />
+    <Compile Include="ScriptGenerator\ScriptGenerator.cs" />
     <EmbeddedResource Include="SqlObjectGeneratorForm.resx">
       <DependentUpon>SqlObjectGeneratorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -64,6 +70,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

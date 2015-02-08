@@ -26,12 +26,22 @@ namespace BC.ScriptGenerator.ObjectTypes
             get
             {
                 return @"
-                    select a.name, b.definition, c.name as [schema]
+                    select
+                        a.name,
+                        b.definition,
+                        c.name as [schema],
+                        state_desc as PermissionType,
+                        permission_name as PermissionName,
+                        pri.name as GranteeName
                     from sys.objects a
                         inner join sys.sql_modules b
                             on a.object_id = b.object_id
                         inner join sys.schemas c
                             on a.schema_id = c.schema_id
+                        left join sys.database_permissions per
+                            on a.object_id = per.major_id
+                        inner join sys.database_principals pri
+                            on per.grantee_principal_id = pri.principal_id
                     where a.type in (N'FN', N'IF', N'TF', N'FS', N'FT')";
             }
         }
@@ -56,7 +66,5 @@ namespace BC.ScriptGenerator.ObjectTypes
                 return sb.ToString();
             }
         }
-
-        public override bool IncludePermissions { get { return true; } }
     }
 }

@@ -66,14 +66,55 @@ namespace BC.ScriptGenerator
 
                 adapter.Fill(table);
 
-                return (from t in table.AsEnumerable()
-                        select new DbObjectResult
-                        {
-                            Name = t.Field<string>("name"),
-                            Definition = t.Field<string>("definition"),
-                            Schema = t.Field<string>("schema"),
-                        }).ToList<DbObjectResult>();
+                var raw = from t in table.AsEnumerable()
+                          select new
+                          {
+                              Name = t.Field<string>("name"),
+                              Definition = t.Field<string>("definition"),
+                              Schema = t.Field<string>("schema"),
+                              PermissionType = t.Field<string>("PermissionType"),
+                              PermissionName = t.Field<string>("PermissionName"),
+                              GranteeName = t.Field<string>("GranteeName")
+                          };
 
+                var grouped = from r in raw
+                              group r by new { r.Name, r.Definition, r.Schema } into g
+                              select g;
+
+                List<DbObjectResult> resultList = new List<DbObjectResult>();
+
+                foreach (var obj in grouped)
+                {
+                    DbObjectResult result = new DbObjectResult();
+                    result.Name = obj.Key.Name;
+                    result.Definition = obj.Key.Definition;
+                    result.Schema = obj.Key.Schema;
+
+                    bool hasPermissions = true;
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var permission in obj)
+                    {
+                        if (permission.PermissionType == null)
+                        {
+                            hasPermissions = false;
+                            break;
+                        }
+
+                        sb.AppendLine(string.Format("{0} {1} on [{2}].[{3}] to [{4}]",
+                            permission.PermissionType,
+                            permission.PermissionName,
+                            obj.Key.Schema,
+                            obj.Key.Name,
+                            permission.Name));
+                    }
+                    sb.AppendLine("GO");
+
+                    result.PermissionString = hasPermissions ? sb.ToString() : null;
+
+                    resultList.Add(result);
+                }
+
+                return resultList;
             }
         }
     }

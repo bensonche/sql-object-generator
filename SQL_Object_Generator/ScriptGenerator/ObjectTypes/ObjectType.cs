@@ -15,8 +15,6 @@ namespace BC.ScriptGenerator
         abstract public string DefinitionQuery { get; }
         abstract public string FileBody { get; }
 
-        abstract public bool IncludePermissions { get; }
-
         public int Count;
 
         public string Remaining

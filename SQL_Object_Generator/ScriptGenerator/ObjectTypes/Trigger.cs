@@ -25,7 +25,13 @@ namespace BC.ScriptGenerator.ObjectTypes
             get
             {
                 return @"
-                    select a.name, b.definition, d.name as [schema]
+                    select
+                        a.name,
+                        b.definition,
+                        c.name as [schema],
+                        null as PermissionType,
+                        null as PermissionName,
+                        null as GranteeName
                     from sys.triggers a
                         inner join sys.sql_modules b
                             on a.object_id = b.object_id
@@ -55,7 +61,5 @@ namespace BC.ScriptGenerator.ObjectTypes
                 return sb.ToString();
             }
         }
-
-        public override bool IncludePermissions { get { return false; } }
     }
 }

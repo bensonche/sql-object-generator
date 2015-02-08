@@ -81,77 +81,30 @@ namespace BC.ScriptGenerator
                     f.Delete();
             });
 
-            var result = await definitionTask;
+            var definitionList = await definitionTask;
 
-            foreach (var obj in result)
+            foreach (var definition in definitionList)
             {
                 type.Count--;
 
-                string name = obj.Name;
-                string definition = obj.Definition;
-                string schema = obj.Schema;
-
-                string filename = string.Format("{0}.{1}.sql", schema, name);
+                string filename = string.Format("{0}.{1}.sql", definition.Schema, definition.Name);
 
                 FileInfo f = new FileInfo(Path.Combine(d.FullName, filename));
 
                 using (Stream s = f.Create())
                 using (StreamWriter w = new StreamWriter(s))
                 {
-                    w.Write(type.FileBody, name, definition, schema);
+                    w.Write(type.FileBody, definition.Name, definition.Definition, definition.Schema);
 
-                    if (type.IncludePermissions)
+                    if (definition.PermissionString != null)
                     {
-                        string permissions = GetPermissionsString(schema, name);
-                        if (!string.IsNullOrWhiteSpace(permissions))
-                        {
-                            w.Write(permissions);
-                            w.Write("GO");
-                        }
+                        w.Write(definition.PermissionString);
+                        w.Write("GO");
                     }
                 }
             }
 
             type.Count = -1;
-        }
-
-        private string GetPermissionsString(string schema, string name)
-        {
-            string commandText = string.Format(@"
-                select state_desc, permission_name, name
-                from sys.database_permissions a
-                    left join sys.database_principals b
-                        on a.grantee_principal_id = b.principal_id
-                where a.major_id = object_id('[{0}].[{1}]')
-                order by state_desc, permission_name, name", schema, name);
-
-            StringBuilder sb = new StringBuilder();
-
-            using (SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                con.Open();
-
-                SqlCommand cmd = new SqlCommand
-                {
-                    Connection = con,
-                    CommandType = CommandType.Text,
-                    CommandText = commandText
-                };
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    sb.AppendLine(string.Format("{0} {1} on [{2}].[{3}] to [{4}]",
-                        reader["state_desc"],
-                        reader["permission_name"],
-                        schema,
-                        name,
-                        reader["name"]));
-                }
-            }
-
-            return sb.ToString();
         }
     }
 }

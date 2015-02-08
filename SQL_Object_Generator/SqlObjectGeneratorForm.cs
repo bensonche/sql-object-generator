@@ -5,11 +5,11 @@ using System.Windows.Forms;
 
 namespace SQL_Object_Generator
 {
-    public partial class Form1 : Form
+    public partial class SqlObjectGeneratorForm : Form
     {
         private ScriptGenerator _generator;
 
-        public Form1()
+        public SqlObjectGeneratorForm()
         {
             InitializeComponent();
 
@@ -30,7 +30,7 @@ namespace SQL_Object_Generator
             txtDirectory.Text = "c:\\temp\\test";
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
+        private void SqlObjectGeneratorForm_Resize(object sender, EventArgs e)
         {
             gpAuthentication.MinimumSize = new Size(Size.Width - 41, 0);
         }
@@ -74,7 +74,7 @@ namespace SQL_Object_Generator
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void SqlObjectGeneratorForm_Load(object sender, EventArgs e)
         {
             ToggleAuthentication();
         }

@@ -87,9 +87,9 @@ namespace BC.ScriptGenerator
             {
                 type.Count--;
 
-                string name = obj.name;
-                string definition = obj.definition;
-                string schema = obj.schema;
+                string name = obj.Name;
+                string definition = obj.Definition;
+                string schema = obj.Schema;
 
                 string filename = string.Format("{0}.{1}.sql", schema, name);
 

@@ -69,9 +69,9 @@ namespace BC.ScriptGenerator
                 return (from t in table.AsEnumerable()
                         select new DbObjectResult
                         {
-                            name = t.Field<string>("name"),
-                            definition = t.Field<string>("definition"),
-                            schema = t.Field<string>("schema"),
+                            Name = t.Field<string>("name"),
+                            Definition = t.Field<string>("definition"),
+                            Schema = t.Field<string>("schema"),
                         }).ToList<DbObjectResult>();
 
             }

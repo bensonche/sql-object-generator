@@ -8,8 +8,12 @@ namespace BC.ScriptGenerator.Model
 {
     public class DbObjectResult
     {
-        public string name;
-        public string definition;
-        public string schema;
+        public string Name;
+        public string Definition;
+        public string Schema;
+
+        public string PermissionType;
+        public string PermissionName;
+        public string GranteeName;
     }
 }

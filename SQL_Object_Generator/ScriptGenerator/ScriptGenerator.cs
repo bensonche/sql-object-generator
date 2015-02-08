@@ -66,62 +66,53 @@ namespace BC.ScriptGenerator
             }
         }
 
-        private void GenerateObjectScript(ObjectType type)
+        private async Task GenerateObjectScript(ObjectType type)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            var definitionTask = data.GetDbOjectAsync(type);
+
+            DirectoryInfo d = new DirectoryInfo(Path.Combine(OutputDir, type.Name));
+
+            await Task.Run(() =>
             {
-                con.Open();
-
-                SqlCommand cmd = new SqlCommand
-                {
-                    Connection = con,
-                    CommandType = CommandType.Text,
-                    CommandText = type.DefinitionQuery
-                };
-
-                var reader = cmd.ExecuteReader();
-
-                DirectoryInfo d = new DirectoryInfo(Path.Combine(OutputDir, type.Name));
-
                 if (!d.Exists)
                     d.Create();
 
                 foreach (var f in d.GetFiles())
                     f.Delete();
+            });
 
-                while (reader.Read())
+            var result = await definitionTask;
+
+            foreach (var obj in result)
+            {
+                type.Count--;
+
+                string name = obj.name;
+                string definition = obj.definition;
+                string schema = obj.schema;
+
+                string filename = string.Format("{0}.{1}.sql", schema, name);
+
+                FileInfo f = new FileInfo(Path.Combine(d.FullName, filename));
+
+                using (Stream s = f.Create())
+                using (StreamWriter w = new StreamWriter(s))
                 {
-                    type.Count--;
+                    w.Write(type.FileBody, name, definition, schema);
 
-                    string name = reader["name"].ToString();
-                    string definition = reader["definition"].ToString();
-                    string schema = reader["schema"].ToString();
-
-                    string filename = string.Format("{0}.{1}.sql", schema, name);
-
-                    FileInfo f = new FileInfo(Path.Combine(d.FullName, filename));
-
-                    using (Stream s = f.Create())
+                    if (type.IncludePermissions)
                     {
-                        using (StreamWriter w = new StreamWriter(s))
+                        string permissions = GetPermissionsString(schema, name);
+                        if (!string.IsNullOrWhiteSpace(permissions))
                         {
-                            w.Write(type.FileBody, name, definition, schema);
-
-                            if (type.IncludePermissions)
-                            {
-                                string permissions = GetPermissionsString(schema, name);
-                                if (!string.IsNullOrWhiteSpace(permissions))
-                                {
-                                    w.Write(permissions);
-                                    w.Write("GO");
-                                }
-                            }
+                            w.Write(permissions);
+                            w.Write("GO");
                         }
                     }
                 }
-
-                type.Count = -1;
             }
+
+            type.Count = -1;
         }
 
         private string GetPermissionsString(string schema, string name)

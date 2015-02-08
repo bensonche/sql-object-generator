@@ -46,18 +46,18 @@ namespace BC.ScriptGenerator
             }
         }
 
-        public List<DbObjectResult> GetDbOject(string query)
+        public async Task<List<DbObjectResult>> GetDbOjectAsync(ObjectType type)
         {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             using (SqlDataAdapter adapter = new SqlDataAdapter())
             {
-                con.Open();
+                await con.OpenAsync();
 
                 SqlCommand cmd = new SqlCommand
                 {
                     Connection = con,
                     CommandType = CommandType.Text,
-                    CommandText = query
+                    CommandText = type.DefinitionQuery
                 };
 
                 adapter.SelectCommand = cmd;
@@ -75,15 +75,6 @@ namespace BC.ScriptGenerator
                         }).ToList<DbObjectResult>();
 
             }
-        }
-
-        private int GetScalar(SqlConnection con, string commandText)
-        {
-            SqlCommand cmd = con.CreateCommand();
-            cmd.CommandText = commandText;
-            cmd.CommandType = CommandType.Text;
-
-            return (int)cmd.ExecuteScalar();
         }
     }
 }

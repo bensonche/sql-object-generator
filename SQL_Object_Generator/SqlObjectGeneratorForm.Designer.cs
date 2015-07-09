@@ -217,7 +217,7 @@
             this.lblStatus.TabIndex = 12;
             this.lblStatus.Text = "Procs:\r\nFunctions:\r\nTriggers:";
             // 
-            // Form1
+            // SqlObjectGeneratorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -233,8 +233,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.MinimumSize = new System.Drawing.Size(300, 300);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "SqlObjectGeneratorForm";
+            this.Text = "SQL Object Generator";
             this.Load += new System.EventHandler(this.SqlObjectGeneratorForm_Load);
             this.Resize += new System.EventHandler(this.SqlObjectGeneratorForm_Resize);
             this.gpAuthentication.ResumeLayout(false);

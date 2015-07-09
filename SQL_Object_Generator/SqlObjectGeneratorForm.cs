@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
+using bche.SettingsManager;
 
 namespace SQL_Object_Generator
 {
@@ -20,8 +21,12 @@ namespace SQL_Object_Generator
 
         private const string settingsFileName = "settings.xml";
 
+        private readonly SettingsManager Settings;
+
         public SqlObjectGeneratorForm()
         {
+            Settings = new SettingsManager();
+
             InitializeComponent();
 
             txtServerName.Enter += Textbox_Enter;
@@ -41,80 +46,34 @@ namespace SQL_Object_Generator
 
         private void SaveSettings()
         {
-            try
-            {
-                IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+            Settings["server"] = txtServerName.Text;
+            Settings["database"] = txtDatabaseName.Text;
+            Settings["directory"] = txtDirectory.Text;
+            Settings["username"] = txtUsername.Text;
+            Settings["password"] = txtPassword.Text;
+            Settings["integrated"] = rdbIntegrated.Checked.ToString();
 
-                using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(settingsFileName, FileMode.OpenOrCreate, FileAccess.Write, isoStore))
-                {
-                    XElement element =
-                        new XElement("config",
-                            new XElement("appSettings",
-                                new XElement("server", txtServerName.Text),
-                                new XElement("database", txtDatabaseName.Text),
-                                new XElement("directory", txtDirectory.Text),
-                                new XElement("username", txtUsername.Text),
-                                new XElement("password", txtPassword.Text),
-                                new XElement("integrated", rdbIntegrated.Checked.ToString())
-                            )
-                        );
-
-                    byte[] data = Encoding.UTF8.GetBytes(element.ToString());
-
-                    byte[] protectedData = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
-
-                    isoStream.Write(protectedData, 0, protectedData.Length);
-                }
-            }
-            catch { }
+            Settings.SaveSettings();
         }
 
         private void LoadSettings()
         {
-            try
+            Settings.LoadSettings();
+
+            txtServerName.Text = Settings["server"];
+            txtDatabaseName.Text = Settings["database"];
+            txtDirectory.Text = Settings["directory"];
+            txtUsername.Text = Settings["username"];
+            txtPassword.Text = Settings["password"];
+
+            bool result;
+            if (bool.TryParse(Settings["integrated"], out result))
             {
-                IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
-
-                if (!isoStore.FileExists(settingsFileName))
-                    return;
-
-                using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(settingsFileName, FileMode.Open, FileAccess.Read, isoStore))
-                {
-                    byte[] protectedData = new byte[isoStream.Length + 10];
-                    int numBytesToRead = (int)isoStream.Length;
-                    int numBytesRead = 0;
-                    do
-                    {
-                        // Read may return anything from 0 to 10. 
-                        int n = isoStream.Read(protectedData, numBytesRead, 10);
-                        numBytesRead += n;
-                        numBytesToRead -= n;
-                    } while (numBytesToRead > 0);
-
-                    byte[] data = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
-
-                    XElement element = XElement.Parse(Encoding.UTF8.GetString(data));
-
-                    txtServerName.Text = GetSettingValue(element, "server");
-                    txtDatabaseName.Text = GetSettingValue(element, "database");
-                    txtDirectory.Text = GetSettingValue(element, "directory");
-                    txtUsername.Text = GetSettingValue(element, "username");
-                    txtPassword.Text = GetSettingValue(element, "password");
-
-                    if (bool.Parse(GetSettingValue(element, "integrated")))
-                        rdbIntegrated.Checked = true;
-                    else
-                        rdbSql.Checked = true;
-                }
+                if (result)
+                    rdbIntegrated.Checked = true;
+                else
+                    rdbSql.Checked = true;
             }
-            catch { }
-        }
-
-        private string GetSettingValue(XElement element, string key)
-        {
-            return (from field in element.Elements("appSettings").Elements(key)
-                    select field.Value).FirstOrDefault() ?? "";
-
         }
 
         private void SqlObjectGeneratorForm_Resize(object sender, EventArgs e)
